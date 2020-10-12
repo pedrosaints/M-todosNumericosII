@@ -3,10 +3,10 @@ import math
 
 #constantes
 t0 = 0
-v0 = 3
-y0 = 150
-k = 0.5
-m = 0.5
+v0 = 5
+y0 = 200
+k = 0.25
+m = 2
 g = 10
 
 #deltat
