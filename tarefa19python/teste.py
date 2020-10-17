@@ -16,15 +16,13 @@ def decoLU(A):
     #fatoracao de gauss, preenchedo L
     for k in range(len(U) - 1):    
         pivot = U[k][k]
-        #print(U)
-        #print(pivot)
         for i in range(k+1, len(U)):
             n = U[i][k]
             divisor = n/pivot
             L[i][k] = -divisor
             for j in range (k,len(U)):
                 U[i][j] = U[i][j] - U[k][j]*divisor
- 
+       
        
     #print(L)
     #print(U)
@@ -58,7 +56,7 @@ def solverLU(P,b):
     
     
 #constantes
-N = 8
+N = 4
 yi = 0
 yf = 1
 deltaX = abs(yf-yi)/N
@@ -69,12 +67,6 @@ def dividir_dominio(yi,yf,deltaX,N):
         e[j-1] = yi + j * deltaX;
     return e;    
 
-def solucao_exata(dominio):
-    r = np.zeros(len(dominio))
-    for j in range(len(r)):
-        r[j] = (1/((math.e**(-1))-math.e))*((math.e**(-dominio[j]))-(math.e**(dominio[j])))
-    return r
-
 def derivada_segunda(dominio,deltaX):
     r = (1/(deltaX**2))*dominio[0] - (2/(deltaX**2)+1)*dominio[1] + (1/(deltaX**2)*dominio)[2]
     return r
@@ -83,42 +75,25 @@ dominio = dividir_dominio(yi,yf,deltaX,N)
 print('DOMINIO: ')
 print(dominio)
 
-#f = derivada_segunda(dominio,deltaX)
-#print('F\'\'(x): ')
-#print(f)
+f = derivada_segunda(dominio,deltaX)
+print('F\'\'(x): ')
+print(f)
 
-A = np.array([[(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6),0],
-[(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6)],
-[(1/0.125**6),(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6)],
-[(-6/0.125**6),(1/0.125**6),(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6)],
-[(15/0.125**6),(-6/0.125**6),(1/0.125**6),(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1],
-[(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6),(1/0.125**6),(-6/0.125**6),(15/0.125**6)],
-[0,(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6),(1/0.125**6),(-6/0.125**6)]])
+A = np.array([[-33,16,0],[16,-33,16],[0,16,-33]])
 print('MATRIZ:')
 print(A)
 
-B = np.array([0,0,0,0,0,0
-,(15/0.125**6)])
+B = np.array([0,0,-16])
 print('B:')
-print(B)     
-   
+print(B)    
 
-#A = np.array([[(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6),0,0,0],
-#[(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6),0,0],
-#[(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6),0],
-#[(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6),(1/0.125**6)],
-#[0,(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6),(-6/0.125**6)],
-#[0,0,(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1,(15/0.125**6)],
-#[0,0,0,(1/0.125**6),(-6/0.125**6),(15/0.125**6),(-20/0.125**6)+1]])
+#A = np.array([[-33,16,0],[16,-33,16],[16,-33,16],[16,-33,16],[16,-33,16],[16,-33,16],[16,-33,16],[0,16,-33]])
 #print('MATRIZ:')
 #print(A)
 
-#B = np.array([0,0,0,0,
-#-(1/0.125**6),
-#-((1/0.125**6)+(-6/0.125**6))
-#,-((1/0.125**6)+(-6/0.125**6)+(15/0.125**6))])
+#B = np.array([0,0,0,0,0,0,0-16])
 #print('B:')
-#print(B)     
+#print(B)    
 
 
 P = decoLU(A)
@@ -127,13 +102,18 @@ X = solverLU(P,B)
 print('X:')
 print(X) 
 
+def solucao_exata(dominio):
+    r = np.zeros(len(dominio))
+    for j in range(len(r)):
+        r[j] = (1/((math.e**(-1))-math.e))*((math.e**(-dominio[j]))-(math.e**(dominio[j])))
+    return r
+
 solucao = solucao_exata(dominio)
 print('SOLUCAO:')
 print(solucao) 
 
 teste = np.copy(X).astype('float')
 for p in range (len(X)):
-    teste[p]=np.dot(A[p],solucao) 
+    teste[p]=np.dot(A[p],X) 
 print('TESTE: A.X')
-print(teste)     
-
+print(teste)        
