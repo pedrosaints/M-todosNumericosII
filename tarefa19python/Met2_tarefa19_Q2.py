@@ -56,7 +56,7 @@ def solverLU(P,b):
     
     
 #constantes
-N = 4
+N = 8
 yi = 0
 yf = 1
 deltaX = abs(yf-yi)/N
@@ -78,19 +78,53 @@ dominio = dividir_dominio(yi,yf,deltaX,N)
 print('DOMINIO: ')
 print(dominio)
 
-A = np.array([[- 2*(1/(deltaX**2)+1/(deltaY**2)),1/(deltaX**2),0,1/(deltaX**2),0,0,0,0,0],
-[1/(deltaX**2),- 2*(1/(deltaX**2)+1/(deltaY**2)),1/(deltaX**2),0,1/(deltaX**2),0,0,0,0],
-[0,1/(deltaX**2),- 2*(1/(deltaX**2)+1/(deltaY**2)),0,0,1/(deltaX**2),0,0,0],
-[1/(deltaX**2),0,0,- 2*(1/(deltaX**2)+1/(deltaY**2)),1/(deltaX**2),0,1/(deltaX**2),0,0],
-[0,1/(deltaX**2),0,1/(deltaX**2),- 2*(1/(deltaX**2)+1/(deltaY**2)),1/(deltaX**2),0,1/(deltaX**2),0],
-[0,0,1/(deltaX**2),0,1/(deltaX**2),- 2*(1/(deltaX**2)+1/(deltaY**2)),0,0,1/(deltaX**2)],
-[0,0,0,1/(deltaX**2),0,0,- 2*(1/(deltaX**2)+1/(deltaY**2)),1/(deltaX**2),0],
-[0,0,0,0,1/(deltaX**2),0,1/(deltaX**2),- 2*(1/(deltaX**2)+1/(deltaY**2)),1/(deltaX**2)],
-[0,0,0,0,0,1/(deltaX**2),0,1/(deltaX**2),- 2*(1/(deltaX**2)+1/(deltaY**2))]])
+#produzindo a matriz A
+A = np.zeros((((N-1)**2),((N-1)**2)))
+for i in range(int(len(A)/2)):
+    if(i%(N/2)!=0):
+        A[i][0] = 1/(deltaX**2)  
+
+for j in range(int(len(A)/2)):
+    if(j%(N/2)!=0):
+        A[0][j] = 1/(deltaX**2)        
+        
+for i in range(len(A)):
+    for j in range(len(A)):
+        if (j==0 and i>1):
+            
+            if(A[i][j]==1/(deltaX**2) ):
+                k = j+1
+                for p in range(i+1,len(A)):
+                    A[p][k] = 1/(deltaX**2)
+                    k = k+1
+                    
+        if (i==0 and j>1):
+            
+            if(A[i][j]==1/(deltaX**2) ):
+                k = i+1
+                for p in range(j+1,len(A)):
+                    A[k][p] = 1/(deltaX**2)
+                    k = k+1                
+                
+        if (i==j):
+            A[i][j] = - 2*(1/(deltaX**2)+1/(deltaY**2))
+        if ((i==j+1)or(i+1==j)):
+            if (i%(N-1) != 0):
+                if(i>j): 
+                    A[i][j] = 1/(deltaX**2)
+                    A[i-1][j+1] = 1/(deltaX**2)
+  
+
+    
+
+
 print('MATRIZ:')
 print(A)
 
-B = np.array([4,4,4,4,4,4,4,4,4])
+B = np.zeros((N-1)**2)
+for j in range(len(B)):
+    B[j] = 8
+
 print('B:')
 print(B)    
 
