@@ -79,51 +79,33 @@ print('DOMINIO: ')
 print(dominio)
 
 #produzindo a matriz A
-A = np.zeros((((N-1)**2),((N-1)**2)))
-for i in range(int(len(A)/2)):
-    if(i%(N/2)!=0):
-        A[i][0] = 1/(deltaX**2)  
-
-for j in range(int(len(A)/2)):
-    if(j%(N/2)!=0):
-        A[0][j] = 1/(deltaX**2)        
-        
-for i in range(len(A)):
-    for j in range(len(A)):
-        if (j==0 and i>1):
-            
-            if(A[i][j]==1/(deltaX**2) ):
-                k = j+1
-                for p in range(i+1,len(A)):
-                    A[p][k] = 1/(deltaX**2)
-                    k = k+1
-                    
-        if (i==0 and j>1):
-            
-            if(A[i][j]==1/(deltaX**2) ):
-                k = i+1
-                for p in range(j+1,len(A)):
-                    A[k][p] = 1/(deltaX**2)
-                    k = k+1                
-                
-        if (i==j):
-            A[i][j] = - 2*(1/(deltaX**2)+1/(deltaY**2))
-        if ((i==j+1)or(i+1==j)):
-            if (i%(N-1) != 0):
-                if(i>j): 
-                    A[i][j] = 1/(deltaX**2)
-                    A[i-1][j+1] = 1/(deltaX**2)
+A = np.zeros((((N-1)**2),((N-1)**2)))   
   
+def preencherMatriz(matriz, n):
+    eq = -1
+    for l in range(n - 1):
+        for c in range(n - 1):
+            eq += 1
+            matriz[eq][eq] = - 2*(1/(deltaX**2)+1/(deltaY**2))
+            if c > 0:
+                matriz[eq][eq - 1] = 1/(deltaX**2)
+            if c < n - 2:
+                matriz[eq][eq + 1] = 1/(deltaX**2)
+            if l > 0:
+                matriz[eq][eq - (n - 1)] = 1/(deltaX**2)
+            if l < n - 2:
+                matriz[eq][eq + (n - 1)] = 1/(deltaX**2)
 
+    return matriz
     
-
+A = preencherMatriz(A, N)
 
 print('MATRIZ:')
 print(A)
 
 B = np.zeros((N-1)**2)
 for j in range(len(B)):
-    B[j] = 8
+    B[j] = 4
 
 print('B:')
 print(B)    
@@ -133,16 +115,6 @@ P = decoLU(A)
 X = solverLU(P,B)
 print('X:')
 print(X) 
-
-#def solucao_exata(dominio):
-#    r = np.zeros(len(dominio))
-#    for j in range(len(r)):
-#        r[j] = (1/((math.e**(-1))-math.e))*((math.e**(-dominio[j]))-(math.e**(dominio[j])))
-#    return r
-
-#solucao = solucao_exata(dominio)
-#print('SOLUCAO:')
-#print(solucao) 
 
 teste = np.copy(X).astype('float')
 for p in range (len(X)):
